@@ -1,4 +1,4 @@
-## Last changed 4/27 3:13
+## Last changed 4/27 3:51
 ## Put comments here that give an overall description of what your
 ## functions do
 
@@ -12,11 +12,11 @@ makeCacheMatrix <- function(x = matrix()) {
                 m <<- NULL
         }
         get <- function() x
-        setmean <- function(mean) m <<- mean
-        getmean <- function() m
+        setinv <- function(solve) m <<- solve
+        getinv <- function() m
         list(set = set, get = get,
-             setmean = setmean,
-             getmean = getmean)
+             setinv = setinv,
+             getinv = getinv)
 }
 
 
@@ -24,6 +24,15 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+        m <- x$getinv()
+        if(!is.null(m)) {
+                message("getting cached data")
+                return(m)
+        }
+        data <- x$get()
+        m <- solve(data, ...)
+        x$setinv(m)
+        m
 }
 
 ## Here is the makeVector function to work with
